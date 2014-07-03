@@ -85,5 +85,23 @@ wru.test([
         );
       }, 100);
     }
+  },{
+    name: 'pass string instead of node',
+    test: function () {
+      Handler.add('html', {
+        click: wru.async(function (e) {
+          this.releaseEvent(e);
+          wru.assert(
+            'this is the right node',
+            e.currentTarget === document.documentElement
+          );
+        })
+      });
+      setTimeout(function () {
+        document.documentElement.dispatchEvent(
+          new CustomEvent('click')
+        );
+      }, 100);
+    }
   }
 ]);
