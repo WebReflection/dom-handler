@@ -70,13 +70,13 @@ wru.test([
     name: 'eventTarget works as expected',
     test: function () {
       Handler.add(document.documentElement, {
-        clickTarget: 'body',
-        click: wru.async(function (e) {
+        customTarget: 'body',
+        custom: wru.async(function (e) {
           wru.assert(e.target === document.body);
         })
       });
       document.body.dispatchEvent(
-        new CustomEvent('click', {
+        new CustomEvent('custom', {
           bubbles: true
         })
       );
