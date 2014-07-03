@@ -6,12 +6,13 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
         <meta names="apple-mobile-web-app-status-bar-style" content="black"/>
+        <script src="node_modules/dom4/build/dom4.js"></script>
         <script>
         // here the list of tests to run with wru
-        var TESTS = ["main"];
+        var TESTS = ["dom-handler"];
         </script>
         <script>// don't change code here
-        for(var i = 0; i < TESTS.length; ++i && document.write('<script src="src/' + TESTS + '.js"><' + '/script>'));
+        for(var i = 0; i < TESTS.length; document.write('<script src="build/' + TESTS[i++] + '.js"><' + '/script>'));
         function wru(wru){
           var
             all = [],
