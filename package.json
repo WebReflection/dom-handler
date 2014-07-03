@@ -1,0 +1,23 @@
+{
+  "version": "0.0.0",
+  "license": "MIT",
+  "name": "dom-handler",
+  "description": "",
+  "homepage": "https://github.com/WebReflection/dom-handler",
+  "keywords": [],
+  "author": {
+    "name": "",
+    "web": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/WebReflection/dom-handler.git"
+  },
+  "main": "./build/dom-handler.node.js",
+  "scripts": {
+    "test": "node test/.test.js"
+  },
+  "dependencies": {
+    "wru": ">= 0.0.0"
+  }
+}
