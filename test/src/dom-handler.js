@@ -1,5 +1,5 @@
 function() {'use strict';
-  // @link https://gist.github.com/WebReflection/9814013
+
   var
     HANDLE_EVENT = 'handleEvent',
     RELEASE_EVENT = 'releaseEvent',
@@ -7,9 +7,16 @@ function() {'use strict';
     ADD = 'add',
     REMOVE = 'remove',
     TARGET = 'Target',
+    arr = Array.prototype,
     re = /^[a-z]/i,
     useTarget
   ;
+
+  function grabNode(node) {
+    return typeof node === 'string' ?
+      document.querySelector(node) :
+      node;
+  }
 
   function handleEvent(e) {
     return this[e.type](e);
@@ -23,7 +30,7 @@ function() {'use strict';
     ;
     if (typeTarget in this) {
       for (
-        matches = [].concat(this[typeTarget]),
+        matches = arr.concat(this[typeTarget]),
         target = e.target,
         i = 0,
         length = target ? matches.length : 0;
@@ -62,7 +69,7 @@ function() {'use strict';
   return {
     add: function add(node, handler) {
       useTarget = false;
-      loopAnd(ADD, node, handler);
+      loopAnd(ADD, grabNode(node), handler);
       if (!(HANDLE_EVENT in handler)) {
         handler.handleEvent = useTarget ?
           handleTargetEvent : handleEvent;
@@ -74,7 +81,7 @@ function() {'use strict';
     },
     remove: function remove(node, handler) {
       useTarget = true;
-      loopAnd(REMOVE, node, handler);
+      loopAnd(REMOVE, grabNode(node), handler);
       return node;
     }
   };
