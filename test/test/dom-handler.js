@@ -17,9 +17,11 @@ wru.test([
           wru.assert('this is the right event', e.type === 'click');
         })
       });
-      document.documentElement.dispatchEvent(
-        new CustomEvent('click')
-      );
+      setTimeout(function () {
+        document.documentElement.dispatchEvent(
+          new CustomEvent('click')
+        );
+      }, 100);
     }
   },{
     name: 'releaseEvent actually releases',
@@ -45,7 +47,7 @@ wru.test([
           }, 100);
         }
       });
-      dispatch();
+      setTimeout(dispatch, 100);
     }
   }, {
     name: 'already present handlers are not touched or fired',
@@ -64,7 +66,7 @@ wru.test([
         new CustomEvent('handleEvent')
       );
       Handler.remove(document.documentElement, o);
-      done();
+      setTimeout(done, 100);
     }
   },{
     name: 'eventTarget works as expected',
@@ -75,11 +77,13 @@ wru.test([
           wru.assert(e.target === document.body);
         })
       });
-      document.body.dispatchEvent(
-        new CustomEvent('custom', {
-          bubbles: true
-        })
-      );
+      setTimeout(function () {
+        document.body.dispatchEvent(
+          new CustomEvent('custom', {
+            bubbles: true
+          })
+        );
+      }, 100);
     }
   }
 ]);
