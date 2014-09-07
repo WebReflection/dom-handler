@@ -66,6 +66,21 @@ Handler.add(
 );
 ```
 
+It is possible to pass more than a delegate element using an array.
+
+```js
+Handler.add(
+  'section.main',
+  {
+    // more than a delegated event
+    clickDelegate: ['button.menu', 'li.menu'],
+    click: function (e) {
+      console.log(e.delegated.nodeName);
+    }
+  }
+);
+```
+
 #### custom methods and properties
 only properties that are functions, starts with `[a-zA-Z]`, and are not `handleEvent` or `releaseEvent` will be set as DOM handler, feel free to use any other name or value to do whatever you want.
 ```js
