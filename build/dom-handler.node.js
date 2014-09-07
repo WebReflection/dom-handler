@@ -22,18 +22,6 @@ THE SOFTWARE.
 */
 module.exports = (function() {'use strict';
 
-  var
-    HANDLE_EVENT = 'handleEvent',
-    RELEASE_EVENT = 'releaseEvent',
-    EVENT_LISTENER = 'EventListener',
-    ADD = 'add',
-    REMOVE = 'remove',
-    TARGET = 'Target',
-    arr = Array.prototype,
-    re = /^[a-z]/i,
-    useTarget
-  ;
-
   function grabNode(node) {
     return typeof node === 'string' ?
       document.querySelector(node) :
@@ -44,21 +32,32 @@ module.exports = (function() {'use strict';
     return this[e.type](e);
   }
 
-  function handleTargetEvent(e) {
+  function handleDelegatedEvent(e) {
     var
-      type = e.type,
-      typeTarget = type + TARGET,
-      matches, target, i, length
+      delegated = this[e.type + 'Delegate'],
+      matches, target, currentTarget, i, length
     ;
-    if (typeTarget in this) {
+    if (delegated) {
       for (
-        matches = arr.concat(this[typeTarget]),
+        matches = Array.prototype.concat(delegated),
         target = e.target,
+        currentTarget = e.currentTarget,
         i = 0,
         length = target ? matches.length : 0;
         i < length; i++
       ) {
-        if (target.matches(matches[i])) length = -1;
+        do {
+          if (target.nodeType === 1 &&
+              target.matches(matches[i])
+          ) {
+            e.delegated = target;
+            length = -1;
+          }
+        } while (
+          -1 < length &&
+          target !== currentTarget &&
+          (target = target.parentNode)
+        );
       }
       if (-1 < length) return;
     }
@@ -66,44 +65,43 @@ module.exports = (function() {'use strict';
   }
 
   function releaseEvent(e) {
-    e.currentTarget[REMOVE + EVENT_LISTENER](
+    e.currentTarget.removeEventListener(
       e.type, this, e.eventPhase === e.CAPTURING_PHASE
     );
   }
 
-  function loopAnd(action, node, handler) {
-    var method = node[action + EVENT_LISTENER], key;
+  function loopAnd(action, node, handler, delegated) {
+    var method = node[action + 'EventListener'], key;
     for (key in handler) {
       if (
-        key !== HANDLE_EVENT &&
-        key !== RELEASE_EVENT &&
-        re.test(key) &&
+        key !== 'handleEvent' &&
+        key !== 'releaseEvent' &&
+        /^[a-z]/i.test(key) &&
         typeof handler[key] === 'function'
       ) {
-        if (!useTarget) useTarget = (key + TARGET) in handler;
+        if (!delegated) delegated = (key + 'Delegate') in handler;
         method.call(
           node, key, handler, !!handler[key + 'Capture']
         );
       }
     }
+    return delegated;
   }
 
   return {
     add: function add(node, handler) {
-      useTarget = false;
-      loopAnd(ADD, grabNode(node), handler);
-      if (!(HANDLE_EVENT in handler)) {
-        handler.handleEvent = useTarget ?
-          handleTargetEvent : handleEvent;
+      var delegated = loopAnd('add', grabNode(node), handler, false);
+      if (!handler.handleEvent) {
+        handler.handleEvent = delegated ?
+          handleDelegatedEvent : handleEvent;
       }
-      if (!(RELEASE_EVENT in handler)) {
+      if (!handler.releaseEvent) {
         handler.releaseEvent = releaseEvent;
       }
       return node;
     },
     remove: function remove(node, handler) {
-      useTarget = true;
-      loopAnd(REMOVE, grabNode(node), handler);
+      loopAnd('remove', grabNode(node), handler, true);
       return node;
     }
   };
