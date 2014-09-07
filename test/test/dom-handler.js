@@ -69,10 +69,10 @@ wru.test([
       setTimeout(done, 100);
     }
   },{
-    name: 'eventTarget works as expected',
+    name: 'eventDelegate works as expected',
     test: function () {
       Handler.add(document.documentElement, {
-        customTarget: 'body',
+        customDelegate: 'body',
         custom: wru.async(function (e) {
           wru.assert(e.target === document.body);
         })
@@ -80,6 +80,29 @@ wru.test([
       setTimeout(function () {
         document.body.dispatchEvent(
           new CustomEvent('custom', {
+            bubbles: true
+          })
+        );
+      }, 100);
+    }
+  },{
+    name: 'eventDelegate works from subnodes too',
+    test: function () {
+      Handler.add(document.documentElement, {
+        anotherDelegate: 'body',
+        another: wru.async(function (e) {
+          document.body.removeChild(text.parentNode);
+          wru.assert(e.delegated === document.body);
+        })
+      });
+      var text = document.body.appendChild(
+        document.createElement('div')
+      ).appendChild(
+        document.createTextNode('text')
+      );
+      setTimeout(function () {
+        text.dispatchEvent(
+          new CustomEvent('another', {
             bubbles: true
           })
         );
