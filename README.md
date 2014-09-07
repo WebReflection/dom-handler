@@ -11,7 +11,7 @@ It's completely dependencies free, it's natively fast, and it fits in less than 
 #### example
 The most basic example is a click, performed once, and never again.
 ```js
-Handler.add(document.documentElement, {
+Handler.add('body', {
   click: function (e) {
     console.log(e.type);
     this.releaseEvent(e);
