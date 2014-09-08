@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-var Handler = (function() {'use strict';
+var Handler = (function () {'use strict';
 
   function grabNode(node) {
     return typeof node === 'string' ?
@@ -90,7 +90,10 @@ var Handler = (function() {'use strict';
 
   return {
     add: function add(node, handler) {
-      var delegated = loopAnd('add', grabNode(node), handler, false);
+      var
+        target = grabNode(node),
+        delegated = loopAnd('add', target, handler, false)
+      ;
       if (!handler.handleEvent) {
         handler.handleEvent = delegated ?
           handleDelegatedEvent : handleEvent;
@@ -98,11 +101,12 @@ var Handler = (function() {'use strict';
       if (!handler.releaseEvent) {
         handler.releaseEvent = releaseEvent;
       }
-      return node;
+      return target;
     },
     remove: function remove(node, handler) {
-      loopAnd('remove', grabNode(node), handler, true);
-      return node;
+      var target = grabNode(node);
+      loopAnd('remove', target, handler, true);
+      return target;
     }
   };
 

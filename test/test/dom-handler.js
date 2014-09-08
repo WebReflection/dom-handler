@@ -126,5 +126,10 @@ wru.test([
         );
       }, 100);
     }
+  },{
+    name: 'returns the node instead of the string',
+    test: function () {
+      wru.assert(Handler.add('html', {}) === document.documentElement);
+    }
   }
 ]);
