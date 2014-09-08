@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-define(function() {'use strict';
+define(function () {'use strict';
 
   function grabNode(node) {
     return typeof node === 'string' ?

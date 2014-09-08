@@ -1,4 +1,4 @@
-function() {'use strict';
+function () {'use strict';
 
   function grabNode(node) {
     return typeof node === 'string' ?
